@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="Fury.vcxproj" Id="d5da3ef3-3aa4-41bc-820d-c2639e614eb4" />
+</Solution>
