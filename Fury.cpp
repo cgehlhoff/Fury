@@ -28,5 +28,13 @@ int main()
 
     printBitboard(b.allPieces());
 
+    std::cout << "\n******\n******\n******\n\n";
+
+    printBitboard(getRookAttacks(E4, 0ULL));
+
+    std::cout << "\n******\n******\n******\n\n";
+
+    printBitboard(getRookAttacks(E4, b.allPieces()));
+
     return 0;
 }

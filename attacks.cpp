@@ -72,3 +72,30 @@ uint64_t getPawnAttacks(int square, Color color) {
 	return boardToReturn;
 
 }
+
+uint64_t getRookAttacks(int square, uint64_t occupied) {
+
+	uint64_t boardToReturn = 0ULL;
+	int file = square % 8;
+	int rank = square / 8;
+	int currentRank, currentFile;
+	int deltaRanks[4] = { 1, 0, -1, 0 };
+	int deltaFiles[4] = { 0, 1, 0, -1 };
+
+	for (int i = 0; i < 4; i++) {
+		currentRank = rank;
+		currentFile = file;
+		while (true) {
+			currentRank += deltaRanks[i];
+			currentFile += deltaFiles[i];
+			if (currentRank > 7 || currentRank < 0 || currentFile > 7 || currentFile < 0) 
+				break;
+			boardToReturn |= (1ULL << (8 * currentRank + (currentFile)));
+			if (occupied & (1ULL << (8 * currentRank + currentFile)))
+				break;
+		}
+	}
+	
+	return boardToReturn;
+
+}
