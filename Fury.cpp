@@ -36,5 +36,13 @@ int main()
 
     printBitboard(getRookAttacks(E4, b.allPieces()));
 
+    std::cout << "\n******\n******\n******\n\n";
+
+    printBitboard(getBishopAttacks(E4, 0ULL));
+
+    std::cout << "\n******\n******\n******\n\n";
+
+    printBitboard(getQueenAttacks(E4, b.allPieces()));
+
     return 0;
 }
