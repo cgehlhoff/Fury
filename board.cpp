@@ -33,6 +33,16 @@ uint64_t Board::allPieces() {
 
 }
 
+uint64_t Board::piecesOf(Color color) const {
+    uint64_t boardToReturn = 0ULL;
+
+    for (int j = 0; j < NUM_PIECE_TYPES; j++) {
+        boardToReturn |= pieces[color][j];
+    }
+
+    return boardToReturn;
+}
+
 void printBitboard(uint64_t board) {
     for (int rank = 7; rank >= 0; rank--) {
         for (int file = 0; file < 8; file++) {

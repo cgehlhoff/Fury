@@ -7,6 +7,7 @@ struct Board {
 
     Board();
 
+    uint64_t piecesOf(Color color) const;
     uint64_t allPieces();
 };
 
