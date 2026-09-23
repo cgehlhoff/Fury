@@ -1,8 +1,6 @@
 #pragma once
 #include <cstdint>
-
-enum COLOR { WHITE, BLACK, NUM_COLORS };
-enum PIECE { PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING, NUM_PIECE_TYPES };
+#include "types.h"
 
 struct Board {
     uint64_t pieces[NUM_COLORS][NUM_PIECE_TYPES];
