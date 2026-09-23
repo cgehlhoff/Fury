@@ -4,3 +4,4 @@
 
 uint64_t getKnightAttacks(int square);
 uint64_t getKingAttacks(int square);
+uint64_t getPawnAttacks(int square, Color color);

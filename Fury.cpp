@@ -20,5 +20,9 @@ int main()
 
     printBitboard(getKingAttacks(E4));
 
+    std::cout << "\n******\n******\n******\n\n";
+
+    printBitboard(getPawnAttacks(E4, BLACK));
+
     return 0;
 }

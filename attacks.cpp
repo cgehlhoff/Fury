@@ -45,3 +45,30 @@ uint64_t getKingAttacks(int square) {
 	return boardToReturn;
 
 }
+
+uint64_t getPawnAttacks(int square, Color color) {
+
+	uint64_t boardToReturn = 0ULL;
+	int file = square % 8;
+	int rank = square / 8;
+	int newRank = 0;
+	int newFile = 0;
+	int rankDelta = 1;
+
+	int fileDeltas[2] = { -1, 1 };
+	if (color == WHITE)
+		rankDelta = 1;
+	else
+		rankDelta = -1;
+
+	for (int i = 0; i < 2; i++) {
+		newRank = rank + rankDelta;
+		newFile = file + fileDeltas[i];
+		if (newRank > -1 && newRank < 8 && newFile > -1 && newFile < 8) {
+			boardToReturn |= (1ULL << (8 * newRank + (newFile)));
+		}
+	}
+
+	return boardToReturn;
+
+}
