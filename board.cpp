@@ -1,4 +1,5 @@
 #include "board.h"
+#include "types.h"
 #include <iostream>
 
 Board::Board() {
@@ -16,6 +17,19 @@ Board::Board() {
     pieces[BLACK][ROOK] = 0x8100000000000000ULL;
     pieces[BLACK][QUEEN] = 0x0800000000000000ULL;
     pieces[BLACK][KING] = 0x1000000000000000ULL;
+
+}
+
+uint64_t Board::allPieces() {
+    uint64_t boardToReturn = 0ULL;
+
+    for (int i = 0; i < NUM_COLORS; i++) {
+        for (int j = 0; j < NUM_PIECE_TYPES; j++) {
+            boardToReturn |= pieces[i][j];
+        }
+    }
+
+    return boardToReturn;
 
 }
 

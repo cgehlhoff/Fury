@@ -24,5 +24,9 @@ int main()
 
     printBitboard(getPawnAttacks(E4, BLACK));
 
+    std::cout << "\n******\n******\n******\n\n";
+
+    printBitboard(b.allPieces());
+
     return 0;
 }
