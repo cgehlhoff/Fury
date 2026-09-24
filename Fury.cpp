@@ -12,7 +12,7 @@ int main()
 {
     Board b;
     
-    printBitboard(getKnightMoves(G1, WHITE, b));
+    printBitboard(getPawnMoves(F6, WHITE, b));
 
     return 0;
 }

@@ -8,7 +8,7 @@ struct Board {
     Board();
 
     uint64_t piecesOf(Color color) const;
-    uint64_t allPieces();
+    uint64_t allPieces() const;
 };
 
 void printBitboard(uint64_t board);

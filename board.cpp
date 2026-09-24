@@ -20,7 +20,7 @@ Board::Board() {
 
 }
 
-uint64_t Board::allPieces() {
+uint64_t Board::allPieces() const {
     uint64_t boardToReturn = 0ULL;
 
     for (int i = 0; i < NUM_COLORS; i++) {
