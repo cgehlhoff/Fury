@@ -77,3 +77,16 @@ uint64_t getPawnMoves(int square, Color color, const Board& b) {
     return boardToReturn;
 
 }
+
+bool isSquareAttacked(int square, Color attackingColor, const Board& b) {
+
+    if ((getKnightAttacks(square) & b.pieces[attackingColor][KNIGHT]) != 0ULL) return true;
+    if ((getBishopAttacks(square, b.allPieces()) & b.pieces[attackingColor][BISHOP]) != 0ULL) return true;
+    if ((getRookAttacks(square, b.allPieces()) & b.pieces[attackingColor][ROOK]) != 0ULL) return true;
+    if ((getQueenAttacks(square, b.allPieces()) & b.pieces[attackingColor][QUEEN]) != 0ULL) return true;
+    if ((getKingAttacks(square) & b.pieces[attackingColor][KING]) != 0ULL) return true;
+    Color defenderColor = (attackingColor == WHITE) ? BLACK : WHITE;
+    if ((getPawnAttacks(square, defenderColor) & b.pieces[attackingColor][PAWN]) != 0ULL) return true;
+
+    return false;
+}

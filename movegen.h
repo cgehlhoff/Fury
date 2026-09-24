@@ -8,3 +8,4 @@ uint64_t getBishopMoves(int square, Color color, const Board& b);
 uint64_t getQueenMoves(int square, Color color, const Board& b);
 uint64_t getPawnPushes(int square, Color color, const Board& b);
 uint64_t getPawnMoves(int square, Color color, const Board& b);
+bool isSquareAttacked(int square, Color color, const Board& b);

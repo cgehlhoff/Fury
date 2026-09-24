@@ -11,8 +11,6 @@
 int main()
 {
     Board b;
-    
-    printBitboard(getPawnMoves(F6, WHITE, b));
 
     return 0;
 }
