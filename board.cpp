@@ -1,5 +1,6 @@
 #include "board.h"
 #include "types.h"
+#include "move.h"
 #include <iostream>
 
 Board::Board() {
@@ -52,4 +53,37 @@ void printBitboard(uint64_t board) {
         std::cout << '\n';
     }
     std::cout << '\n';
+}
+
+MoveInfo Board::makeMove(int from, int to, Piece piece, Color color) {
+    MoveInfo info;
+    info.wasCapture = false;
+    Color enemyColor = (color == WHITE) ? BLACK : WHITE;
+
+    if (piecesOf(enemyColor) & (1ULL << to)) {
+        for (int i = 0; i < NUM_PIECE_TYPES; i++) {
+            if (pieces[enemyColor][i] & (1ULL << to)) {
+                info.wasCapture = true;
+                info.capturedPiece = (Piece)i;
+                pieces[enemyColor][i] &= (~(1ULL << to));
+                break;
+            }
+        }
+    }
+
+    pieces[color][piece] &= (~(1ULL << from));
+    pieces[color][piece] |= (1ULL << to);
+
+    return info;
+
+}
+
+void Board::unmakeMove(int from, int to, Piece piece, Color color, MoveInfo info) {
+    pieces[color][piece] &= (~(1ULL << to));
+    pieces[color][piece] |= (1ULL << from);
+    Color enemyColor = (color == WHITE) ? BLACK : WHITE;
+
+    if (info.wasCapture) {
+        pieces[enemyColor][info.capturedPiece] |= (1ULL << to);
+    }
 }

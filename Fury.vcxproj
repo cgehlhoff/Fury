@@ -147,6 +147,7 @@
   <ItemGroup>
     <ClInclude Include="attacks.h" />
     <ClInclude Include="board.h" />
+    <ClInclude Include="move.h" />
     <ClInclude Include="movegen.h" />
     <ClInclude Include="types.h" />
   </ItemGroup>
