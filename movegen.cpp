@@ -90,3 +90,29 @@ bool isSquareAttacked(int square, Color attackingColor, const Board& b) {
 
     return false;
 }
+
+// filters out moves that would leave king in check
+uint64_t filterLegalMoves(int from, Piece piece, Color color, uint64_t pseudoMoves, Board& b) {
+
+    uint64_t legalMoves = 0ULL;
+    Color enemyColor = (color == WHITE) ? BLACK : WHITE;
+    int to = 0;
+    MoveInfo info;
+
+    while (pseudoMoves != 0ULL) {
+
+        to = bitscan(pseudoMoves);
+        pseudoMoves &= pseudoMoves - 1;
+
+        info = b.makeMove(from, to, piece, color);
+
+        if (!isSquareAttacked(bitscan(b.pieces[color][KING]), enemyColor, b)) {
+            legalMoves |= (1ULL << to);
+        }
+        
+        b.unmakeMove(from, to, piece, color, info);
+        
+    }
+
+    return legalMoves;
+}

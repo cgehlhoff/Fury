@@ -1,6 +1,12 @@
 #include <cstdint>
 #include "types.h"
 
+#ifdef _MSC_VER
+#include <intrin.h>
+
+#endif // _MSC_VER
+
+
 uint64_t getKnightAttacks(int square) {
 	
 	uint64_t boardToReturn = 0ULL;
@@ -134,4 +140,18 @@ uint64_t getQueenAttacks(int square, uint64_t occupied) {
 	boardToReturn |= getBishopAttacks(square, occupied);
 
 	return boardToReturn;
+}
+
+int bitscan(uint64_t bitboard) {
+
+#ifdef _MSC_VER
+	unsigned long index;
+	_BitScanForward64(&index, bitboard);
+	return (int)index;
+
+#else
+	return __builtin_ctzll(bitboard);
+#endif // _MSC_VER
+
+
 }
