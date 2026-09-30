@@ -1,4 +1,5 @@
 #include <cstdint>
+#include <vector>
 #include "types.h"
 #include "board.h"
 #include "attacks.h"
@@ -115,4 +116,67 @@ uint64_t filterLegalMoves(int from, Piece piece, Color color, uint64_t pseudoMov
     }
 
     return legalMoves;
+}
+
+
+// for each piece type (PAWN through KING):
+//     for each piece of that type belonging to `color`:
+//         from = bitscan that piece's bit, clear it, advance
+//         pseudoMoves = call the matching getXMoves(from, color, b)
+//         legalMoves = filterLegalMoves(from, pieceType, color, pseudoMoves, b)
+//         for each set bit in legalMoves:
+//             build a Move{from, to, pieceType} and push_back it
+
+std::vector<Move> generateAllMoves(Color color, Board& b) {
+    std::vector<Move> moves;
+    uint64_t pieceBitboard = 0ULL;
+    uint64_t pseudoMoves = 0ULL;
+    uint64_t legalMoves = 0ULL;
+    int from = 0;
+    int to = 0;
+
+    for (int pieceType = 0; pieceType < NUM_PIECE_TYPES; pieceType++) {
+        pieceBitboard = b.pieces[color][pieceType];
+
+        while (pieceBitboard != 0ULL) {
+            from = bitscan(pieceBitboard);
+            pieceBitboard &= pieceBitboard - 1;
+
+            switch (pieceType) {
+                case PAWN:
+                    pseudoMoves = getPawnMoves(from, color, b);
+                    break;
+                case KNIGHT:
+                    pseudoMoves = getKnightMoves(from, color, b);
+                    break;
+                case BISHOP:
+                    pseudoMoves = getBishopMoves(from, color, b);
+                    break;
+                case ROOK:
+                    pseudoMoves = getRookMoves(from, color, b);
+                    break;
+                case QUEEN:
+                    pseudoMoves = getQueenMoves(from, color, b);
+                    break;
+                case KING:
+                    pseudoMoves = getKingMoves(from, color, b);
+                    break;
+            }
+
+            legalMoves = filterLegalMoves(from, (Piece)pieceType, color, pseudoMoves, b);
+            
+            while (legalMoves != 0ULL) {
+                to = bitscan(legalMoves);
+                legalMoves &= legalMoves - 1;
+
+                Move m;
+                m.from = from;
+                m.to = to;
+                m.piece = (Piece)pieceType;
+                moves.push_back(m);
+            }
+        }
+    }
+
+    return moves;
 }

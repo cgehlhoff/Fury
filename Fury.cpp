@@ -2,6 +2,7 @@
 //
 
 #include <iostream>
+#include <vector>
 #include "board.h"
 #include "types.h"
 #include "attacks.h"
@@ -11,16 +12,10 @@
 int main()
 {
     Board b;
-    MoveInfo info;
     
-    info = b.makeMove(E2, E4, PAWN, WHITE);
-
-    printBitboard(b.allPieces());
-    std::cout << "\n\n\n";
-
-    b.unmakeMove(E2, E4, PAWN, WHITE, info);
-
-    printBitboard(b.allPieces());
+    std::vector<Move> moves = generateAllMoves(WHITE, b);
+    std::cout << moves.size();
+    
 
     return 0;
 }
