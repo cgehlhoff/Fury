@@ -75,6 +75,10 @@ uint64_t getPawnMoves(int square, Color color, const Board& b) {
     boardToReturn |= getPawnPushes(square, color, b);
     boardToReturn |= getPawnAttacks(square, color) & b.piecesOf(enemyColor);
     
+    if (b.enPassantTarget.has_value()) {
+        boardToReturn |= getPawnAttacks(square, color) & (1ULL << b.enPassantTarget.value());
+    }
+
     return boardToReturn;
 
 }

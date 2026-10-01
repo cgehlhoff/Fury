@@ -2,6 +2,7 @@
 #include "types.h"
 #include "move.h"
 #include <iostream>
+#include <optional>
 
 Board::Board() {
 
@@ -58,9 +59,28 @@ void printBitboard(uint64_t board) {
 MoveInfo Board::makeMove(int from, int to, Piece piece, Color color) {
     MoveInfo info;
     info.wasCapture = false;
+    info.wasEnPassant = false;
+
+    info.previousEnPassantTarget = enPassantTarget;
+
+    if (piece == PAWN && std::abs(to - from) == 16) {
+        enPassantTarget = (from + to) / 2;
+    }
+    else {
+        enPassantTarget = std::nullopt;
+    }
+
     Color enemyColor = (color == WHITE) ? BLACK : WHITE;
 
-    if (piecesOf(enemyColor) & (1ULL << to)) {
+    if (piece == PAWN && info.previousEnPassantTarget.has_value() && to == info.previousEnPassantTarget.value()) {
+        // en  passant capture
+        int capturedSquare = (color == WHITE) ? to - 8 : to + 8;
+        info.wasCapture = true;
+        info.wasEnPassant = true;
+        info.capturedPiece = PAWN;
+        pieces[enemyColor][PAWN] &= (~(1ULL << capturedSquare));
+    }
+    else if (piecesOf(enemyColor) & (1ULL << to)) {
         for (int i = 0; i < NUM_PIECE_TYPES; i++) {
             if (pieces[enemyColor][i] & (1ULL << to)) {
                 info.wasCapture = true;
@@ -84,6 +104,14 @@ void Board::unmakeMove(int from, int to, Piece piece, Color color, MoveInfo info
     Color enemyColor = (color == WHITE) ? BLACK : WHITE;
 
     if (info.wasCapture) {
-        pieces[enemyColor][info.capturedPiece] |= (1ULL << to);
+        if (info.wasEnPassant) {
+            int capturedSqaure = (color == WHITE) ? to - 8 : to + 8;
+            pieces[enemyColor][PAWN] |= (1ULL << capturedSqaure);
+        }
+        else {
+            pieces[enemyColor][info.capturedPiece] |= (1ULL << to);
+        }
     }
+
+    enPassantTarget = info.previousEnPassantTarget;
 }

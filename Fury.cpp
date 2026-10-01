@@ -9,13 +9,12 @@
 #include "movegen.h"
 
 
-int main()
-{
+int main() {
     Board b;
-    
-    uint64_t result = perft(4, WHITE, b);
-    std::cout << result;
-    
+
+    for (int d = 1; d <= 5; d++) {
+        std::cout << "perft(" << d << ") = " << perft(d, WHITE, b) << "\n";
+    }
 
     return 0;
 }

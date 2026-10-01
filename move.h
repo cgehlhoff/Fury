@@ -1,9 +1,12 @@
 #pragma once
 #include "types.h"
+#include <optional>
 
 struct MoveInfo {
-    Piece capturedPiece;
-    bool wasCapture;
+    Piece capturedPiece = PAWN;
+    bool wasCapture = false;
+    bool wasEnPassant = false;
+    std::optional<int> previousEnPassantTarget;
 };
 
 struct Move {
