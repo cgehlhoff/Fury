@@ -13,8 +13,8 @@ int main()
 {
     Board b;
     
-    std::vector<Move> moves = generateAllMoves(WHITE, b);
-    std::cout << moves.size();
+    uint64_t result = perft(4, WHITE, b);
+    std::cout << result;
     
 
     return 0;

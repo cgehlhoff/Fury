@@ -118,15 +118,6 @@ uint64_t filterLegalMoves(int from, Piece piece, Color color, uint64_t pseudoMov
     return legalMoves;
 }
 
-
-// for each piece type (PAWN through KING):
-//     for each piece of that type belonging to `color`:
-//         from = bitscan that piece's bit, clear it, advance
-//         pseudoMoves = call the matching getXMoves(from, color, b)
-//         legalMoves = filterLegalMoves(from, pieceType, color, pseudoMoves, b)
-//         for each set bit in legalMoves:
-//             build a Move{from, to, pieceType} and push_back it
-
 std::vector<Move> generateAllMoves(Color color, Board& b) {
     std::vector<Move> moves;
     uint64_t pieceBitboard = 0ULL;
@@ -179,4 +170,28 @@ std::vector<Move> generateAllMoves(Color color, Board& b) {
     }
 
     return moves;
+}
+
+uint64_t perft(int depth, Color color, Board& b) {
+    
+    if (depth == 0) {
+        return 1;
+    }
+
+    depth--;
+
+    uint64_t nodeCount = 0;
+    std::vector<Move> moves = generateAllMoves(color, b);
+
+    Color oppositeColor = (color == WHITE) ? BLACK : WHITE;
+    
+    for (Move m : moves) {
+
+        MoveInfo info = b.makeMove(m.from, m.to, m.piece, color);
+        nodeCount += perft(depth, oppositeColor, b);
+        b.unmakeMove(m.from, m.to, m.piece, color, info);
+    }
+
+    return nodeCount;
+
 }
