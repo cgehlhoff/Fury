@@ -3,6 +3,7 @@
 #include "types.h"
 #include "board.h"
 #include "attacks.h"
+#include "movegen.h"
 
 uint64_t getKnightMoves(int square, Color color, const Board& b) {
 
@@ -14,6 +15,14 @@ uint64_t getKnightMoves(int square, Color color, const Board& b) {
 uint64_t getKingMoves(int square, Color color, const Board& b) {
 
 	uint64_t boardToReturn = getKingAttacks(square) & (~b.piecesOf(color));
+
+    if (canCastleKingside(color, b)) {
+        boardToReturn |= (color == WHITE) ? (1ULL << G1) : (1ULL << G8);
+    }
+    if (canCastleQueenside(color, b)) {
+        boardToReturn |= (color == WHITE) ? (1ULL << C1) : (1ULL << C8);
+    }
+
 	return boardToReturn;
 
 }
@@ -198,4 +207,62 @@ uint64_t perft(int depth, Color color, Board& b) {
 
     return nodeCount;
 
+}
+
+bool canCastleKingside(Color color, const Board& b) {
+    if (color == WHITE) {
+
+        if (!b.whiteCanCastleKingside) return false;
+
+        uint64_t betweenSquares = (1ULL << F1) | (1ULL << G1);
+        if (b.allPieces() & betweenSquares) return false;
+
+        if (isSquareAttacked(E1, BLACK, b)) return false;  // king currently in check
+        if (isSquareAttacked(F1, BLACK, b)) return false;  // king would pass through attack
+
+        return true;
+    }
+    else if (color == BLACK) {
+
+        if (!b.blackCanCastleKingside) return false;
+
+        uint64_t betweenSquares = (1ULL << F8) | (1ULL << G8);
+        if (b.allPieces() & betweenSquares) return false;
+
+        if (isSquareAttacked(E8, WHITE, b)) return false;  // king currently in check
+        if (isSquareAttacked(F8, WHITE, b)) return false;  // king would pass through attack
+
+        return true;
+    }
+
+    return false;
+}
+
+bool canCastleQueenside(Color color, const Board& b) {
+    if (color == WHITE) {
+
+        if (!b.whiteCanCastleQueenside) return false;
+
+        uint64_t betweenSquares = (1ULL << B1) | (1ULL << C1) | (1ULL << D1);
+        if (b.allPieces() & betweenSquares) return false;
+
+        if (isSquareAttacked(E1, BLACK, b)) return false;  // king currently in check
+        if (isSquareAttacked(C1, BLACK, b) || isSquareAttacked(D1, BLACK, b)) return false;  // king would pass through attack
+
+        return true;
+    }
+    else if (color == BLACK) {
+
+        if (!b.blackCanCastleQueenside) return false;
+
+        uint64_t betweenSquares = (1ULL << B8) | (1ULL << C8) | (1ULL << D8);
+        if (b.allPieces() & betweenSquares) return false;
+
+        if (isSquareAttacked(E8, WHITE, b)) return false;  // king currently in check
+        if (isSquareAttacked(C8, WHITE, b) || isSquareAttacked(D8, WHITE, b)) return false;  // king would pass through attack
+
+        return true;
+    }
+
+    return false;
 }

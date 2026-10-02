@@ -13,3 +13,5 @@ bool isSquareAttacked(int square, Color color, const Board& b);
 uint64_t filterLegalMoves(int from, Piece piece, Color color, uint64_t psuedoMoves, Board& b);
 std::vector<Move> generateAllMoves(Color color, Board& b);
 uint64_t perft(int depth, Color color, Board& b);
+bool canCastleKingside(Color color, const Board& b);
+bool canCastleQueenside(Color color, const Board& b);

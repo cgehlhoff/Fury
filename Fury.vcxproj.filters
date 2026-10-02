@@ -27,6 +27,9 @@
     <ClCompile Include="movegen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="fen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="board.h">
@@ -42,6 +45,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="move.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="fen.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

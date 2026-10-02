@@ -8,6 +8,10 @@
 struct Board {
     uint64_t pieces[NUM_COLORS][NUM_PIECE_TYPES];
     std::optional<int> enPassantTarget;
+    bool whiteCanCastleKingside; // this can be compacted to a 4 bit something later.
+    bool whiteCanCastleQueenside;
+    bool blackCanCastleKingside;
+    bool blackCanCastleQueenside;
 
     Board();
 

@@ -62,12 +62,35 @@ MoveInfo Board::makeMove(int from, int to, Piece piece, Color color) {
     info.wasEnPassant = false;
 
     info.previousEnPassantTarget = enPassantTarget;
+    info.previousWhiteCanCastleKingside = whiteCanCastleKingside;
+    info.previousWhiteCanCastleQueenside = whiteCanCastleQueenside;
+    info.previousBlackCanCastleKingside = blackCanCastleKingside;
+    info.previousBlackCanCastleQueenside = blackCanCastleQueenside;
 
     if (piece == PAWN && std::abs(to - from) == 16) {
         enPassantTarget = (from + to) / 2;
     }
     else {
         enPassantTarget = std::nullopt;
+    }
+
+    // maybe optimize this later with bits and less ifs
+    if (piece == ROOK && color == WHITE && from == A1) whiteCanCastleQueenside = false;
+    if (piece == ROOK && color == WHITE && from == H1) whiteCanCastleKingside = false;
+    if (piece == ROOK && color == BLACK && from == A8) blackCanCastleQueenside = false;
+    if (piece == ROOK && color == BLACK && from == H8) blackCanCastleKingside = false;
+    if (to == A1) whiteCanCastleQueenside = false;
+    if (to == H1) whiteCanCastleKingside = false;
+    if (to == A8) blackCanCastleQueenside = false;
+    if (to == H8) blackCanCastleKingside = false;
+
+    if (piece == KING && color == WHITE) {
+        whiteCanCastleKingside = false;
+        whiteCanCastleQueenside = false;
+    }
+    if (piece == KING && color == BLACK) {
+        blackCanCastleKingside = false;
+        blackCanCastleQueenside = false;
     }
 
     Color enemyColor = (color == WHITE) ? BLACK : WHITE;
@@ -79,6 +102,22 @@ MoveInfo Board::makeMove(int from, int to, Piece piece, Color color) {
         info.wasEnPassant = true;
         info.capturedPiece = PAWN;
         pieces[enemyColor][PAWN] &= (~(1ULL << capturedSquare));
+    }
+    else if (piece == KING && std::abs(to - from) == 2) {
+        bool kingside = (to > from);
+        int rookFrom, rookTo;
+
+        if (color == WHITE) {
+            rookFrom = kingside ? H1 : A1;   // rook's home square
+            rookTo = kingside ? F1 : D1;   // square the rook jumps to
+        }
+        else {
+            rookFrom = kingside ? H8 : A8;
+            rookTo = kingside ? F8 : D8;
+        }
+
+        pieces[color][ROOK] &= (~(1ULL << rookFrom));  // rook leaves home
+        pieces[color][ROOK] |= (1ULL << rookTo);        // rook lands on the crossed square
     }
     else if (piecesOf(enemyColor) & (1ULL << to)) {
         for (int i = 0; i < NUM_PIECE_TYPES; i++) {
@@ -113,5 +152,27 @@ void Board::unmakeMove(int from, int to, Piece piece, Color color, MoveInfo info
         }
     }
 
+    if (piece == KING && std::abs(to - from) == 2) {
+        bool kingside = (to > from);
+        int rookFrom, rookTo;
+
+        if (color == WHITE) {
+            rookFrom = kingside ? H1 : A1;
+            rookTo = kingside ? F1 : D1;
+        }
+        else {
+            rookFrom = kingside ? H8 : A8;
+            rookTo = kingside ? F8 : D8;
+        }
+
+        pieces[color][ROOK] &= (~(1ULL << rookTo));
+        pieces[color][ROOK] |= (1ULL << rookFrom);
+    }
+
     enPassantTarget = info.previousEnPassantTarget;
+
+    whiteCanCastleKingside = info.previousWhiteCanCastleKingside;
+    whiteCanCastleQueenside = info.previousWhiteCanCastleQueenside;
+    blackCanCastleKingside = info.previousBlackCanCastleKingside;
+    blackCanCastleQueenside = info.previousBlackCanCastleQueenside;
 }

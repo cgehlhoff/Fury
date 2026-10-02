@@ -95,10 +95,10 @@ uint64_t getRookAttacks(int square, uint64_t occupied) {
 			currentRank += deltaRanks[i];
 			currentFile += deltaFiles[i];
 			if (currentRank > 7 || currentRank < 0 || currentFile > 7 || currentFile < 0) 
-				break;
+				return true;
 			boardToReturn |= (1ULL << (8 * currentRank + (currentFile)));
 			if (occupied & (1ULL << (8 * currentRank + currentFile)))
-				break;
+				return true;
 		}
 	}
 	
@@ -122,10 +122,10 @@ uint64_t getBishopAttacks(int square, uint64_t occupied) {
 			currentRank += deltaRanks[i];
 			currentFile += deltaFiles[i];
 			if (currentRank > 7 || currentRank < 0 || currentFile > 7 || currentFile < 0)
-				break;
+				return true;
 			boardToReturn |= (1ULL << (8 * currentRank + (currentFile)));
 			if (occupied & (1ULL << (8 * currentRank + currentFile)))
-				break;
+				return true;
 		}
 	}
 
