@@ -17,8 +17,8 @@ struct Board {
 
     uint64_t piecesOf(Color color) const;
     uint64_t allPieces() const;
-    MoveInfo makeMove(int from, int to, Piece piece, Color color);
-    void unmakeMove(int from, int to, Piece piece, Color color, MoveInfo info);
+    MoveInfo makeMove(int from, int to, Piece piece, Color color, std::optional<Piece> promotionPiece = std::nullopt);
+    void unmakeMove(int from, int to, Piece piece, Color color, MoveInfo info, std::optional<Piece> promotionPiece = std::nullopt);
 };
 
 

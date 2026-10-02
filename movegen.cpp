@@ -173,11 +173,26 @@ std::vector<Move> generateAllMoves(Color color, Board& b) {
                 to = bitscan(legalMoves);
                 legalMoves &= legalMoves - 1;
 
-                Move m;
-                m.from = from;
-                m.to = to;
-                m.piece = (Piece)pieceType;
-                moves.push_back(m);
+                bool isPromotion = (pieceType == PAWN) && ((color == WHITE && to >= A8) || (color == BLACK && to <= H1));
+
+                if (isPromotion) {
+                    Piece promotionChoices[4] = { QUEEN, ROOK, BISHOP, KNIGHT };
+                    for (Piece promo : promotionChoices) {
+                        Move m;
+                        m.from = from;
+                        m.to = to;
+                        m.piece = (Piece)pieceType;
+                        m.promotionPiece = promo;
+                        moves.push_back(m);
+                    }
+                }
+                else {
+                    Move m;
+                    m.from = from;
+                    m.to = to;
+                    m.piece = (Piece)pieceType;
+                    moves.push_back(m);
+                }
             }
         }
     }
@@ -199,7 +214,6 @@ uint64_t perft(int depth, Color color, Board& b) {
     Color oppositeColor = (color == WHITE) ? BLACK : WHITE;
     
     for (Move m : moves) {
-
         MoveInfo info = b.makeMove(m.from, m.to, m.piece, color);
         nodeCount += perft(depth, oppositeColor, b);
         b.unmakeMove(m.from, m.to, m.piece, color, info);

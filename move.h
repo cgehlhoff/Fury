@@ -17,4 +17,5 @@ struct Move {
     int from;
     int to;
     Piece piece;
+    std::optional<Piece> promotionPiece;
 };

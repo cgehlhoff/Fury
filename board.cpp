@@ -56,7 +56,7 @@ void printBitboard(uint64_t board) {
     std::cout << '\n';
 }
 
-MoveInfo Board::makeMove(int from, int to, Piece piece, Color color) {
+MoveInfo Board::makeMove(int from, int to, Piece piece, Color color, std::optional<Piece> promotionPiece) {
     MoveInfo info;
     info.wasCapture = false;
     info.wasEnPassant = false;
@@ -131,15 +131,26 @@ MoveInfo Board::makeMove(int from, int to, Piece piece, Color color) {
     }
 
     pieces[color][piece] &= (~(1ULL << from));
-    pieces[color][piece] |= (1ULL << to);
+    if (promotionPiece.has_value()) {
+        pieces[color][promotionPiece.value()] |= (1ULL << to);
+    } else
+        pieces[color][piece] |= (1ULL << to);
 
     return info;
 
 }
 
-void Board::unmakeMove(int from, int to, Piece piece, Color color, MoveInfo info) {
-    pieces[color][piece] &= (~(1ULL << to));
-    pieces[color][piece] |= (1ULL << from);
+void Board::unmakeMove(int from, int to, Piece piece, Color color, MoveInfo info, std::optional<Piece> promotionPiece) {
+
+    if (promotionPiece.has_value()) {
+        pieces[color][promotionPiece.value()] &= (~(1ULL << to));   // remove the promoted piece
+        pieces[color][piece] |= (1ULL << from);                     
+    }
+    else {
+        pieces[color][piece] &= (~(1ULL << to));
+        pieces[color][piece] |= (1ULL << from);
+    }
+
     Color enemyColor = (color == WHITE) ? BLACK : WHITE;
 
     if (info.wasCapture) {

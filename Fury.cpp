@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <vector>
+#include <string>
 #include "board.h"
 #include "types.h"
 #include "attacks.h"
@@ -10,20 +11,22 @@
 #include "fen.h"
 
 int main() {
+
     Board b;
 
-    Color side = parseFEN("rnbqkbnr/pp2pp1p/2pp4/5Pp1/8/4P3/PPPP2PP/RNBQKBNR w KQkq g6 0 4", b);
-
-    printBitboard(b.pieces[WHITE][PAWN]);
-    printBitboard(b.pieces[BLACK][PAWN]);
-    std::cout << "side to move: " << (side == WHITE ? "WHITE" : "BLACK") << "\n";
-    std::cout << "en passant target: " << (b.enPassantTarget.has_value() ? b.enPassantTarget.value() : -1) << "\n";
-    std::cout << "white KQ: " << b.whiteCanCastleKingside << " " << b.whiteCanCastleQueenside << "\n";
-    std::cout << "black kq: " << b.blackCanCastleKingside << " " << b.blackCanCastleQueenside << "\n";
-
-    /*for (int d = 1; d <= 6; d++) {
+    std::cout << "PERFT DEPTH 6\n";
+    for (int d = 1; d <= 6; d++) {
         std::cout << "perft(" << d << ") = " << perft(d, WHITE, b) << "\n";
-    }*/
+    }
+
+    std::string kiwipete = "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1";
+    Color side = parseFEN(kiwipete, b);
+
+    std::cout << "KIWIPETE DEPTH 4\n";
+
+    for (int d = 1; d <= 4; d++) {
+        std::cout << "perft(" << d << ") = " << perft(d, side, b) << "\n";
+    } 
 
     return 0;
 }
