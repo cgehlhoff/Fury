@@ -153,5 +153,12 @@ int bitscan(uint64_t bitboard) {
 	return __builtin_ctzll(bitboard);
 #endif // _MSC_VER
 
+}
 
+int popcount(uint64_t bitboard) {
+#ifdef _MSC_VER
+	return (int)__popcnt64(bitboard);
+#else
+	return __builtin_popcountll(bitboard);
+#endif
 }

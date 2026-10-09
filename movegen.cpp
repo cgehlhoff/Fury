@@ -214,9 +214,9 @@ uint64_t perft(int depth, Color color, Board& b) {
     Color oppositeColor = (color == WHITE) ? BLACK : WHITE;
     
     for (Move m : moves) {
-        MoveInfo info = b.makeMove(m.from, m.to, m.piece, color);
+        MoveInfo info = b.makeMove(m.from, m.to, m.piece, color, m.promotionPiece);
         nodeCount += perft(depth, oppositeColor, b);
-        b.unmakeMove(m.from, m.to, m.piece, color, info);
+        b.unmakeMove(m.from, m.to, m.piece, color, info, m.promotionPiece);
     }
 
     return nodeCount;

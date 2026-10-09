@@ -9,24 +9,22 @@
 #include "attacks.h"
 #include "movegen.h"
 #include "fen.h"
+#include "search.h"
 
 int main() {
 
     Board b;
 
-    std::cout << "PERFT DEPTH 6\n";
-    for (int d = 1; d <= 6; d++) {
-        std::cout << "perft(" << d << ") = " << perft(d, WHITE, b) << "\n";
+    std::string testFEN = "6k1/5ppp/8/8/8/8/8/R5K1 w - - 0 1";
+    Color side = parseFEN(testFEN, b);
+
+    std::optional<Move> result = findBestMove(2, side, b);
+
+    if (result.has_value()) {
+        Move m = result.value();
+        std::cout << char('a' + m.from % 8) << char('1' + m.from / 8)
+            << char('a' + m.to % 8) << char('1' + m.to / 8) << "\n";
     }
-
-    std::string kiwipete = "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1";
-    Color side = parseFEN(kiwipete, b);
-
-    std::cout << "KIWIPETE DEPTH 4\n";
-
-    for (int d = 1; d <= 4; d++) {
-        std::cout << "perft(" << d << ") = " << perft(d, side, b) << "\n";
-    } 
 
     return 0;
 }

@@ -20,6 +20,11 @@ Board::Board() {
     pieces[BLACK][QUEEN] = 0x0800000000000000ULL;
     pieces[BLACK][KING] = 0x1000000000000000ULL;
 
+    whiteCanCastleKingside = true;
+    whiteCanCastleQueenside = true;
+    blackCanCastleKingside = true;
+    blackCanCastleQueenside = true;
+
 }
 
 uint64_t Board::allPieces() const {
