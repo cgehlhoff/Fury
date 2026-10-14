@@ -16,7 +16,7 @@ static std::string squareName(int sq) {
     s += (char)('a' + sq % 8);
     s += (char)('1' + sq / 8);
     return s;
-}
+}   
 
 static std::string moveToUci(const Move& m) {
     std::string s = squareName(m.from) + squareName(m.to);

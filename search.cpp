@@ -11,7 +11,7 @@ const int MATE_SCORE = 100000;
 
 int evaluate(Board b, Color color) {
 
-	int pieceValues[NUM_PIECE_TYPES] = { 100, 300, 300, 500, 900, 0 };
+	int pieceValues[NUM_PIECE_TYPES] = { 100, 300, 300, 500, 900, 0 }; // value of pawn, bishop, knight, rook, queen, king
 	int myTotal = 0;
 	int opponentTotal = 0;
 	Color opponentColor = (color == WHITE) ? BLACK : WHITE;
@@ -31,7 +31,6 @@ int negamax(int depth, Color color, Board& b) {
     if (depth == 0) {
         return evaluate(b, color);
     }
-
     
     int bestScore = -1000000;
     Color oppositeColor = (color == WHITE) ? BLACK : WHITE;
