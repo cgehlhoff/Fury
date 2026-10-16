@@ -108,7 +108,7 @@ void uciLoop() {
             handlePosition(iss, b, side);
         }
         else if (cmd == "go") {
-            std::optional<Move> best = findBestMove(4, side, b);
+            std::optional<Move> best = findBestMove(6, side, b);
             if (best.has_value()) {
                 std::cout << "bestmove " << moveToUci(best.value()) << std::endl;
             }

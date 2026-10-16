@@ -9,9 +9,9 @@
 
 const int MATE_SCORE = 100000;
 
-int evaluate(Board b, Color color) {
+int evaluate(const Board& b, Color color) {
 
-	int pieceValues[NUM_PIECE_TYPES] = { 100, 300, 300, 500, 900, 0 }; // value of pawn, bishop, knight, rook, queen, king
+	int pieceValues[NUM_PIECE_TYPES] = { 100, 300, 300, 500, 900, 0 };
 	int myTotal = 0;
 	int opponentTotal = 0;
 	Color opponentColor = (color == WHITE) ? BLACK : WHITE;
@@ -27,15 +27,15 @@ int evaluate(Board b, Color color) {
 
 }
 
-int negamax(int depth, Color color, Board& b) {
+// alpha beta
+int negamax(int depth, int alpha, int beta, Color color, Board& b) {
     if (depth == 0) {
         return evaluate(b, color);
     }
-    
-    int bestScore = -1000000;
+
     Color oppositeColor = (color == WHITE) ? BLACK : WHITE;
 
-    std::vector moves = generateAllMoves(color, b);
+    std::vector<Move> moves = generateAllMoves(color, b);
 
     if (moves.empty()) {
         bool inCheck = isSquareAttacked(bitscan(b.pieces[color][KING]), oppositeColor, b);
@@ -47,21 +47,25 @@ int negamax(int depth, Color color, Board& b) {
 
     for (Move m : moves) {
         MoveInfo info = b.makeMove(m.from, m.to, m.piece, color, m.promotionPiece);
-        int currentScore = -negamax(depth - 1, oppositeColor, b);
-        if (currentScore > bestScore) {
-            bestScore = currentScore;
-        }
+        int currentScore = -negamax(depth - 1, -beta, -alpha, oppositeColor, b);
         b.unmakeMove(m.from, m.to, m.piece, color, info, m.promotionPiece);
+        if (currentScore >= beta) {
+            return beta;
+        }
+        if (currentScore > alpha) {
+            alpha = currentScore;
+        }
     }
     
-    return bestScore;
+    return alpha;
 
 }
 
 std::optional <Move> findBestMove(int depth, Color color, Board& b) {
 
     std::vector<Move> moves = generateAllMoves(color, b);
-    int bestScore = INT_MIN;
+    int alpha = -1000000;
+    int beta = 1000000;
     Color oppositeColor = (color == WHITE) ? BLACK : WHITE;
 
     if (moves.empty()) {
@@ -72,9 +76,9 @@ std::optional <Move> findBestMove(int depth, Color color, Board& b) {
 
     for (Move m : moves) {
         MoveInfo info = b.makeMove(m.from, m.to, m.piece, color, m.promotionPiece);
-        int currentScore = -negamax(depth - 1, oppositeColor, b);
-        if (currentScore > bestScore) {
-            bestScore = currentScore;
+        int currentScore = -negamax(depth - 1, -beta, -alpha, oppositeColor, b); // new parameters for negamax
+        if (currentScore > alpha) {
+            alpha = currentScore;
             bestMove = m;
         }
         b.unmakeMove(m.from, m.to, m.piece, color, info, m.promotionPiece);
